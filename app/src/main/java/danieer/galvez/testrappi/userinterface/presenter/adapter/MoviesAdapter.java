@@ -17,6 +17,7 @@ import danieer.galvez.testrappi.userinterface.presenter.viewholder.MovieItemView
 public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Movie> movies = new ArrayList<>();
+    private danieer.galvez.testrappi.userinterface.presenter.interfaces.onItemClick onItemClick;
 
     @NonNull
     @Override
@@ -28,6 +29,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((MovieItemViewHolder) holder).bind(movies.get(position));
+        if (onItemClick != null)
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(movies.get(position).getId()));
 
     }
 
@@ -41,5 +44,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public void addMovies(List<Movie> movies) {
         this.movies.addAll(movies);
+    }
+
+    public void setOnItemClick(danieer.galvez.testrappi.userinterface.presenter.interfaces.onItemClick onItemClick) {
+        this.onItemClick = onItemClick;
     }
 }

@@ -1,5 +1,7 @@
 package danieer.galvez.testrappi.userinterface.fragment;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Objects;
 
 import danieer.galvez.testrappi.R;
+import danieer.galvez.testrappi.network.network.utils.NetworkUtils;
+import danieer.galvez.testrappi.userinterface.activity.MovieDetailsActivity;
 import danieer.galvez.testrappi.userinterface.presenter.adapter.MoviesAdapter;
+import danieer.galvez.testrappi.userinterface.presenter.interfaces.onItemClick;
 import danieer.galvez.testrappi.viewmodel.MainViewModel;
 
-public class RatedMoviesFragment extends Fragment {
+public class RatedMoviesFragment extends Fragment implements onItemClick {
 
     private MainViewModel mainViewModel;
     private RecyclerView movieList;
@@ -59,6 +64,7 @@ public class RatedMoviesFragment extends Fragment {
 
     private void initializeElements() {
         moviesAdapter = new MoviesAdapter();
+        moviesAdapter.setOnItemClick(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         movieList.setLayoutManager(gridLayoutManager);
         movieList.setItemAnimator(new DefaultItemAnimator());
@@ -79,7 +85,7 @@ public class RatedMoviesFragment extends Fragment {
                     }
                 }
                 if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-                    mainViewModel.noPageTopRated    .postValue(pageNo);
+                    mainViewModel.noPageTopRated.postValue(pageNo);
                     loading = true;
                 }
             }
@@ -101,6 +107,14 @@ public class RatedMoviesFragment extends Fragment {
             pageNo++;
         });
 
+    }
+
+    @Override
+    public void onItemClick(int movieId) {
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+        Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+        detailsIntent.putExtra(NetworkUtils.MOVIE_ID, movieId);
+        getActivity().startActivity(detailsIntent,options.toBundle());
     }
 
 }

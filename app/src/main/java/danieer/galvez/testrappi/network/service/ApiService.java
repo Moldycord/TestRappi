@@ -5,6 +5,7 @@ import danieer.galvez.testrappi.model.MovieResponse;
 import danieer.galvez.testrappi.network.network.utils.NetworkUtils;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -22,7 +23,7 @@ public interface ApiService {
                                          @Query(NetworkUtils.PAGE_NO) int pageNo);
 
     @GET(NetworkUtils.MOVIE_DETAILS_ENDPOINT)
-    Call<MovieDetailResponse> getMovieDetails(@Query(NetworkUtils.MOVIE_ID) int movieId,
+    Call<MovieDetailResponse> getMovieDetails(@Path(NetworkUtils.MOVIE_ID) int movieId,
                                               @Query(NetworkUtils.API_KEY_QUERY) String apiKey,
                                               @Query(NetworkUtils.APPEND_TO_RESPONSE) String videos);
 }

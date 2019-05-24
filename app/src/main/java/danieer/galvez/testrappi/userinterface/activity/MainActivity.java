@@ -1,4 +1,4 @@
-package danieer.galvez.testrappi.userinterface;
+package danieer.galvez.testrappi.userinterface.activity;
 
 import android.os.Bundle;
 

@@ -1,9 +1,12 @@
 package danieer.galvez.testrappi.userinterface.fragment;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,10 +22,13 @@ import java.util.Objects;
 
 import danieer.galvez.testrappi.R;
 import danieer.galvez.testrappi.model.Movie;
+import danieer.galvez.testrappi.network.network.utils.NetworkUtils;
+import danieer.galvez.testrappi.userinterface.activity.MovieDetailsActivity;
 import danieer.galvez.testrappi.userinterface.presenter.adapter.MoviesAdapter;
+import danieer.galvez.testrappi.userinterface.presenter.interfaces.onItemClick;
 import danieer.galvez.testrappi.viewmodel.MainViewModel;
 
-public class PopularMoviesFragment extends Fragment {
+public class PopularMoviesFragment extends Fragment implements onItemClick {
 
     private MainViewModel mainViewModel;
     private RecyclerView movieList;
@@ -63,6 +69,7 @@ public class PopularMoviesFragment extends Fragment {
 
     private void initializeElements() {
         moviesAdapter = new MoviesAdapter();
+        moviesAdapter.setOnItemClick(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         movieList.setLayoutManager(gridLayoutManager);
         movieList.setItemAnimator(new DefaultItemAnimator());
@@ -88,6 +95,26 @@ public class PopularMoviesFragment extends Fragment {
                 }
             }
         });
+        movieList.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+
+                    @Override
+                    public boolean onPreDraw() {
+                        movieList.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                        for (int i = 0; i < movieList.getChildCount(); i++) {
+                            View v = movieList.getChildAt(i);
+                            v.setAlpha(0.0f);
+                            v.animate().alpha(1.0f)
+                                    .setDuration(300)
+                                    .setStartDelay(i * 50)
+                                    .start();
+                        }
+
+                        return true;
+                    }
+                });
+
         setupViewModel();
     }
 
@@ -107,4 +134,11 @@ public class PopularMoviesFragment extends Fragment {
 
     }
 
+    @Override
+    public void onItemClick(int movieId) {
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+        Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+        detailsIntent.putExtra(NetworkUtils.MOVIE_ID, movieId);
+        getActivity().startActivity(detailsIntent,options.toBundle());
+    }
 }

@@ -1,10 +1,12 @@
 package danieer.galvez.testrappi.userinterface.fragment;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Objects;
 
 import danieer.galvez.testrappi.R;
+import danieer.galvez.testrappi.network.network.utils.NetworkUtils;
+import danieer.galvez.testrappi.userinterface.activity.MovieDetailsActivity;
 import danieer.galvez.testrappi.userinterface.presenter.adapter.MoviesAdapter;
+import danieer.galvez.testrappi.userinterface.presenter.interfaces.onItemClick;
 import danieer.galvez.testrappi.viewmodel.MainViewModel;
 
-public class UpcomingMoviesFragment extends Fragment {
+public class UpcomingMoviesFragment extends Fragment implements onItemClick {
 
     private MainViewModel mainViewModel;
     private RecyclerView movieList;
@@ -63,6 +68,7 @@ public class UpcomingMoviesFragment extends Fragment {
 
     private void initializeElements() {
         moviesAdapter = new MoviesAdapter();
+        moviesAdapter.setOnItemClick(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         movieList.setLayoutManager(gridLayoutManager);
         movieList.setItemAnimator(new DefaultItemAnimator());
@@ -105,5 +111,13 @@ public class UpcomingMoviesFragment extends Fragment {
             pageNo++;
         });
 
+    }
+
+    @Override
+    public void onItemClick(int movieId) {
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+        Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+        detailsIntent.putExtra(NetworkUtils.MOVIE_ID, movieId);
+        getActivity().startActivity(detailsIntent,options.toBundle());
     }
 }
