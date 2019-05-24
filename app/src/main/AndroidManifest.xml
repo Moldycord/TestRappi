@@ -18,8 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".userinterface.activity.MovieDetailsActivity"></activity>
+        <activity
+            android:name=".userinterface.activity.MovieDetailsActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".userinterface.activity.MainActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

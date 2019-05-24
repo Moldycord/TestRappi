@@ -1,12 +1,12 @@
 package danieer.galvez.testrappi.userinterface.fragment;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,15 +16,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import danieer.galvez.testrappi.R;
-import danieer.galvez.testrappi.model.Movie;
 import danieer.galvez.testrappi.network.network.utils.NetworkUtils;
 import danieer.galvez.testrappi.userinterface.activity.MovieDetailsActivity;
 import danieer.galvez.testrappi.userinterface.presenter.adapter.MoviesAdapter;
+import danieer.galvez.testrappi.userinterface.presenter.interfaces.OnQueryChangedListener;
 import danieer.galvez.testrappi.userinterface.presenter.interfaces.onItemClick;
 import danieer.galvez.testrappi.viewmodel.MainViewModel;
 
@@ -136,9 +134,14 @@ public class PopularMoviesFragment extends Fragment implements onItemClick {
 
     @Override
     public void onItemClick(int movieId) {
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+
         Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
         detailsIntent.putExtra(NetworkUtils.MOVIE_ID, movieId);
-        getActivity().startActivity(detailsIntent,options.toBundle());
+        getActivity().startActivity(detailsIntent);
     }
+
+    public OnQueryChangedListener onQueryChangedListener = query -> Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+
+
+
 }
